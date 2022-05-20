@@ -28,7 +28,9 @@ describe("transfer_sol", () => {
 
     console.log(fromBalance, toBalance)
 
-    const tx = await program.methods.transferNativeSol().accounts({
+    let amountToSend = new anchor.BN(1000000);
+
+    const tx = await program.methods.transferNativeSol(amountToSend).accounts({
       from: from.publicKey,
       to: to.publicKey,
       user: from.publicKey,
