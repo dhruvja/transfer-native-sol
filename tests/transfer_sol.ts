@@ -18,21 +18,25 @@ describe("transfer_sol", () => {
 
     const to = anchor.web3.Keypair.generate();
 
+    const company = anchor.web3.Keypair.generate();
+
     await provider.connection.confirmTransaction(
       await provider.connection.requestAirdrop(from.publicKey, 10000000000),
       "confirmed"
     );
 
     let fromBalance = await provider.connection.getBalance(from.publicKey);
-    let toBalance = await provider.connection.getBalance(to.publicKey)
+    let creatorBalance = await provider.connection.getBalance(to.publicKey)
+    let companyBalance = await provider.connection.getBalance(company.publicKey)
 
-    console.log(fromBalance, toBalance)
+    console.log(fromBalance, creatorBalance, companyBalance)
 
-    let amountToSend = new anchor.BN(1000000);
+    let amountToSend = new anchor.BN(100000000);
 
     const tx = await program.methods.transferNativeSol(amountToSend).accounts({
       from: from.publicKey,
       to: to.publicKey,
+      company: company.publicKey,
       user: from.publicKey,
       systemProgram: anchor.web3.SystemProgram.programId
     }).signers([from]).rpc();
@@ -40,9 +44,11 @@ describe("transfer_sol", () => {
     console.log(tx)
 
     fromBalance = await provider.connection.getBalance(from.publicKey);
-    toBalance = await provider.connection.getBalance(to.publicKey)
+    creatorBalance = await provider.connection.getBalance(to.publicKey)
+    companyBalance = await provider.connection.getBalance(company.publicKey)
 
-    console.log(fromBalance, toBalance)
+
+    console.log(fromBalance, creatorBalance, companyBalance)
 
 
     // const tx = await program.methods.initialize().rpc();
